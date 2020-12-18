@@ -16,7 +16,7 @@ clear all;
 
 % ========================= PATH VARIABLES ===============================================================================================
 
-% Path vars (there are some relative paths useed in the script):
+% Path vars (there are some relative paths used in the script):
 PATH_EEGLAB           = 'a_path';
 PATH_FIELDTRIP        = 'a_path';
 PATH_CUSTOM           = 'a_path';
@@ -61,8 +61,8 @@ if ismember('part1', to_execute)
         subject = subject_list{s};
         id = str2num(subject(3 : 4));
 
-        % Load BrainVision data | path_to_file, [data range to load], [channels to load]
-        EEG = pop_loadbv(PATH_RAW_DATA, [subject '_Block1.vhdr'], [], 1 : 60);
+        % Load data
+        EEG = pop_loadset('filename', [subject '.set'], 'filepath', PATH_RAW_DATA, 'loadmode', 'all');
         EEG = pop_chanedit(EEG, 'lookup', channel_location_file);
         EEG.chanlocs_original = EEG.chanlocs;
 
@@ -165,11 +165,11 @@ if ismember('part1', to_execute)
                 if ismember(rnum, [3, 13])
                     new_events(stimnum).resploc = 'left';
                     new_events(stimnum).acc = 1;
-                    new_events(stimnum).rt = EEG.event(f).latency - EEG.event(e).latency;
+                    new_events(stimnum).rt = (EEG.event(f).latency - EEG.event(e).latency) * 1000 / EEG.srate;
                 elseif ismember(rnum, [4, 14])
                     new_events(stimnum).resploc = 'right';
                     new_events(stimnum).acc = 1;
-                    new_events(stimnum).rt = EEG.event(f).latency - EEG.event(e).latency;
+                    new_events(stimnum).rt = (EEG.event(f).latency - EEG.event(e).latency) * 1000 / EEG.srate;
                 elseif ismember(rnum, [5, 6, 9, 10, 11, 12, 15, 16])
                     new_events(stimnum).resploc = 'none';
                     new_events(stimnum).acc = 0;
